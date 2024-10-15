@@ -5,10 +5,10 @@ namespace SchemaPalWebApi.Repositories
 {
     public class InMemoryUserRepository : IUserRepository
     {
-        private readonly ConcurrentDictionary<Guid, User> _usersById = new();
-        private readonly ConcurrentDictionary<string, User> _usersByUsername = new();
+        private readonly ConcurrentDictionary<Guid, UserRecord> _usersById = new();
+        private readonly ConcurrentDictionary<string, UserRecord> _usersByUsername = new();
 
-        public Guid CreateUser(User user)
+        public Guid CreateUser(UserRecord user)
         {
             user.Id = Guid.NewGuid();
             _usersById[user.Id] = user;
@@ -17,14 +17,14 @@ namespace SchemaPalWebApi.Repositories
             return user.Id;
         }
 
-        public User GetUserByUsername(string username)
+        public UserRecord GetUserByUsername(string username)
         {
             _usersByUsername.TryGetValue(username, out var user);
 
             return user;
         }
 
-        public User GetUserById(Guid id)
+        public UserRecord GetUserById(Guid id)
         {
             _usersById.TryGetValue(id, out var user);
 

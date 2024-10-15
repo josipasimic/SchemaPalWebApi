@@ -40,7 +40,7 @@ namespace SchemaPalWebApi.Controllers
 
             var passwordHash = _passwordService.HashPassword(userRegistration.Password);
 
-            var user = new User
+            var user = new UserRecord
             {
                 Username = userRegistration.Username,
                 PasswordHash = passwordHash

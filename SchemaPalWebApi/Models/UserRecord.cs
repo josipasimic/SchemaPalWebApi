@@ -1,6 +1,6 @@
 ﻿namespace SchemaPalWebApi.Models
 {
-    public class User
+    public class UserRecord
     {
         public Guid Id { get; set; }
 

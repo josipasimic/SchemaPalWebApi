@@ -4,11 +4,11 @@ namespace SchemaPalWebApi.Repositories
 {
     public interface IUserRepository
     {
-        Guid CreateUser(User user);
+        Guid CreateUser(UserRecord user);
 
-        User GetUserByUsername(string username);
+        UserRecord GetUserByUsername(string username);
 
-        User GetUserById(Guid id);
+        UserRecord GetUserById(Guid id);
 
         bool UserExists(string username);
     }
