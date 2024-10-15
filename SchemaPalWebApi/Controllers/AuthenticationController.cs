@@ -72,9 +72,15 @@ namespace SchemaPalWebApi.Controllers
         }
 
         [HttpPost("refresh-token")]
-        public IActionResult RefreshToken([FromBody] RefreshToken refreshToken)
+        public IActionResult RefreshToken([FromBody] AccessToken currentToken)
         {
-            var principal = _tokenService.GetPrincipalFromExpiredToken(refreshToken.Token);
+            var isTokenExpired = _tokenService.CheckIfTokenExpired(currentToken.Token);
+            if (!isTokenExpired)
+            {
+                return Ok(currentToken);
+            }
+
+            var principal = _tokenService.GetPrincipalFromExpiredToken(currentToken.Token);
             if (principal == null)
             {
                 return Unauthorized("Token nije moguće obnoviti.");

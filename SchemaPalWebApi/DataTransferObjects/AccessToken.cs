@@ -1,6 +1,6 @@
 ﻿namespace SchemaPalWebApi.DataTransferObjects
 {
-    public class RefreshToken
+    public class AccessToken
     {
         public string Token { get; set; }
     }

@@ -15,6 +15,38 @@ namespace SchemaPalWebApi.Services
             _configuration = configuration;
         }
 
+        public bool CheckIfTokenExpired(string token)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+
+            try
+            {
+                var principal = tokenHandler.ValidateToken(token, new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["JwtSettings:SecretKey"])),
+                    ValidateIssuer = false,
+                    ValidateAudience = false
+                }, out SecurityToken validatedToken);
+
+                if (validatedToken is JwtSecurityToken jwtToken)
+                {
+                    return jwtToken.ValidTo > DateTime.UtcNow;
+                }
+            }
+            catch (SecurityTokenExpiredException)
+            {
+                return true;
+            }
+            catch (Exception)
+            {
+                return true;
+            }
+
+            return true;
+        }
+
+
         public string GenerateToken(Guid userId)
         {
             var claims = new List<Claim>
@@ -30,7 +62,7 @@ namespace SchemaPalWebApi.Services
                 issuer: _configuration["JwtSettings:Issuer"],
                 audience: _configuration["JwtSettings:Audience"],
                 claims: claims,
-                expires: DateTime.Now.AddMinutes(tokenExpiry),
+                expires: DateTime.UtcNow.AddMinutes(tokenExpiry),
                 signingCredentials: creds);
 
             return new JwtSecurityTokenHandler().WriteToken(token);
