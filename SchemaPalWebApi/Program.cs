@@ -42,10 +42,20 @@ builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddSingleton<IUserRepository, InMemoryUserRepository>();
 builder.Services.AddSingleton<IDatabaseSchemaRepository, InMemoryDatabaseSchemaRepository>();
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowSchemaPalApp",
+        builder => builder.WithOrigins("https://localhost:7135")
+                          .AllowAnyHeader()
+                          .AllowAnyMethod());
+});
+
 var app = builder.Build();
 
 app.UseHttpsRedirection();
 app.UseRouting();
+
+app.UseCors("AllowSchemaPalApp");
 
 // Enable authentication and authorization
 app.UseAuthentication();

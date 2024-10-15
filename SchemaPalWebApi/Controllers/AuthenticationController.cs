@@ -3,6 +3,7 @@ using SchemaPalWebApi.DataTransferObjects;
 using SchemaPalWebApi.Models;
 using SchemaPalWebApi.Repositories;
 using SchemaPalWebApi.Services;
+using System.Net;
 using System.Security.Claims;
 
 namespace SchemaPalWebApi.Controllers
@@ -35,7 +36,7 @@ namespace SchemaPalWebApi.Controllers
 
             if (_userRepository.UserExists(userRegistration.Username))
             {
-                return Conflict("Username already exists.");
+                return Conflict("Korisničko ime već postoji.");
             }
 
             var passwordHash = _passwordService.HashPassword(userRegistration.Password);
@@ -48,7 +49,7 @@ namespace SchemaPalWebApi.Controllers
 
             _userRepository.CreateUser(user);
 
-            return StatusCode(201);
+            return StatusCode((int)HttpStatusCode.Created);
         }
 
         [HttpPost("login")]
@@ -76,14 +77,14 @@ namespace SchemaPalWebApi.Controllers
             var principal = _tokenService.GetPrincipalFromExpiredToken(refreshToken.Token);
             if (principal == null)
             {
-                return Unauthorized("Invalid refresh token.");
+                return Unauthorized("Token nije moguće obnoviti.");
             }
 
             var userIdClaim = principal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             var user = _userRepository.GetUserById(Guid.Parse(userIdClaim));
             if (user == null)
             {
-                return Unauthorized("User not found.");
+                return Unauthorized("Korisnik nije pronađen.");
             }
 
             var newToken = _tokenService.GenerateToken(user.Id);

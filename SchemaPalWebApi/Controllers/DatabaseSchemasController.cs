@@ -24,8 +24,9 @@ namespace SchemaPalWebApi.Controllers
             var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (userIdClaim == null || !Guid.TryParse(userIdClaim, out var userId))
             {
-                throw new UnauthorizedAccessException("User is not authenticated.");
+                throw new UnauthorizedAccessException("Korisnik nije autenticiran.");
             }
+
             return userId;
         }
 
