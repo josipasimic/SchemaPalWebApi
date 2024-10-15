@@ -1,0 +1,6 @@
+@SchemaPalWebApi_HostAddress = http://localhost:5162
+
+GET {{SchemaPalWebApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
