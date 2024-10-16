@@ -47,7 +47,7 @@ namespace SchemaPalWebApi.Controllers
                 };
 
                 _repository.AddSchema(newSchema);
-                return CreatedAtAction(nameof(GetSchema), new { id = newSchema.Id }, newSchema);
+                return CreatedAtAction(nameof(GetSchema), newSchema.Id);
             }
 
             if (existingSchema.UserId != userId)
@@ -59,7 +59,7 @@ namespace SchemaPalWebApi.Controllers
             existingSchema.SchemaJsonFormat = schema.SchemaJsonFormat;
 
             _repository.UpdateSchema(existingSchema);
-            return NoContent();
+            return Ok(existingSchema.Id);
         }
 
         [HttpGet]

@@ -4,7 +4,6 @@ using SchemaPalWebApi.Models;
 using SchemaPalWebApi.Repositories;
 using SchemaPalWebApi.Services;
 using System.Net;
-using System.Security.Claims;
 
 namespace SchemaPalWebApi.Controllers
 {
@@ -68,34 +67,7 @@ namespace SchemaPalWebApi.Controllers
 
             var token = _tokenService.GenerateToken(user.Id);
 
-            return Ok(new { Token = token });
-        }
-
-        [HttpPost("refresh-token")]
-        public IActionResult RefreshToken([FromBody] AccessToken currentToken)
-        {
-            var isTokenExpired = _tokenService.CheckIfTokenExpired(currentToken.Token);
-            if (!isTokenExpired)
-            {
-                return Ok(currentToken);
-            }
-
-            var principal = _tokenService.GetPrincipalFromExpiredToken(currentToken.Token);
-            if (principal == null)
-            {
-                return Unauthorized("Token nije moguće obnoviti.");
-            }
-
-            var userIdClaim = principal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-            var user = _userRepository.GetUserById(Guid.Parse(userIdClaim));
-            if (user == null)
-            {
-                return Unauthorized("Korisnik nije pronađen.");
-            }
-
-            var newToken = _tokenService.GenerateToken(user.Id);
-
-            return Ok(new { Token = newToken });
+            return Ok(token);
         }
     }
 }
