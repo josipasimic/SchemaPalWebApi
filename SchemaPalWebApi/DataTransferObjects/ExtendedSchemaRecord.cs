@@ -13,14 +13,5 @@ namespace SchemaPalWebApi.DataTransferObjects
         public string SchemaJsonFormat { get; set; }
 
         public DateTime LastSaved { get; set; }
-
-        public ExtendedSchemaRecord(DatabaseSchemaRecord schemaRecord)
-        {
-            Id = schemaRecord.Id;
-            UserId = schemaRecord.UserId;
-            Name = schemaRecord.Name;
-            SchemaJsonFormat = schemaRecord.SchemaJsonFormat;
-            LastSaved = schemaRecord.LastSaved;
-        }
     }
 }

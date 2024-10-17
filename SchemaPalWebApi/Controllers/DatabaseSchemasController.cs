@@ -47,7 +47,7 @@ namespace SchemaPalWebApi.Controllers
                 };
 
                 _repository.AddSchema(newSchema);
-                return CreatedAtAction(nameof(GetSchema), newSchema.Id);
+                return CreatedAtAction(nameof(SaveOrUpdateSchema), newSchema.Id);
             }
 
             if (existingSchema.UserId != userId)
@@ -85,7 +85,15 @@ namespace SchemaPalWebApi.Controllers
                 return NotFound();
             }
 
-            var extendedSchemaRecord = new ExtendedSchemaRecord(schema);
+            var extendedSchemaRecord = new ExtendedSchemaRecord
+            {
+                Id = schema.Id,
+                UserId = schema.UserId,
+                Name = schema.Name,
+                SchemaJsonFormat = schema.SchemaJsonFormat,
+                LastSaved = schema.LastSaved
+            };
+
             return Ok(extendedSchemaRecord);
         }
 

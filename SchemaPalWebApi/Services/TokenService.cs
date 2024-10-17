@@ -40,8 +40,7 @@ namespace SchemaPalWebApi.Services
 
             return new AccessToken
             {
-                Token = tokenString,
-                ExpirationDateUtc = tokenExpiryDate
+                Token = tokenString
             };
         }
     }
