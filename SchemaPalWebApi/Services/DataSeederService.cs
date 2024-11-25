@@ -5,34 +5,42 @@ namespace SchemaPalWebApi.Services
 {
     public class DataSeederService : IHostedService
     {
-        private readonly IUserRepository _userRepository;
-        private readonly IDatabaseSchemaRepository _databaseSchemaRepository;
-        private readonly IPasswordService _passwordService;
+        private readonly IServiceProvider _serviceProvider;
 
-        public DataSeederService(IUserRepository userRepository,
+        public DataSeederService(IServiceProvider serviceProvider)
+        {
+            _serviceProvider = serviceProvider;
+        }
+
+        public async Task StartAsync(CancellationToken cancellationToken)
+        {
+            using var scope = _serviceProvider.CreateScope();
+            var userRepository = scope.ServiceProvider.GetRequiredService<IUserRepository>();
+            var databaseSchemaRepository = scope.ServiceProvider.GetRequiredService<IDatabaseSchemaRepository>();
+            var passwordService = scope.ServiceProvider.GetRequiredService<IPasswordService>();
+
+            await SeedDataAsync(userRepository, databaseSchemaRepository, passwordService);
+        }
+
+        public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
+
+        private async Task SeedDataAsync(IUserRepository userRepository,
             IDatabaseSchemaRepository databaseSchemaRepository,
             IPasswordService passwordService)
         {
-            _userRepository = userRepository;
-            _databaseSchemaRepository = databaseSchemaRepository;
-            _passwordService = passwordService;
-        }
+            var doesUserExist = userRepository.UserExists("demo.korisnik");
+            if (doesUserExist)
+            {
+                return;
+            }
 
-        public Task StartAsync(CancellationToken cancellationToken)
-        {
-            SeedData();
-            return Task.CompletedTask;
-        }
-
-        private void SeedData()
-        {
             var defaultUser = new UserRecord
             {
                 Username = "demo.korisnik",
-                PasswordHash = _passwordService.HashPassword("demo123!")
+                PasswordHash = passwordService.HashPassword("demo123!")
             };
 
-            var seedUserId = _userRepository.CreateUser(defaultUser);
+            var seedUserId = userRepository.CreateUser(defaultUser);
 
             var firstDemoSchemaLocation = Path.Combine(AppContext.BaseDirectory, "DemoSchemas", "demoschema1.json");
             var firstDemoSchema = new DatabaseSchemaRecord
@@ -42,7 +50,7 @@ namespace SchemaPalWebApi.Services
                 SchemaJsonFormat = File.ReadAllText(firstDemoSchemaLocation)
             };
 
-            _databaseSchemaRepository.AddSchema(firstDemoSchema);
+            databaseSchemaRepository.AddSchema(firstDemoSchema);
 
             var secondDemoSchemaLocation = Path.Combine(AppContext.BaseDirectory, "DemoSchemas", "demoschema2.json");
             var secondDemoSchema = new DatabaseSchemaRecord
@@ -52,12 +60,7 @@ namespace SchemaPalWebApi.Services
                 SchemaJsonFormat = File.ReadAllText(secondDemoSchemaLocation)
             };
 
-            _databaseSchemaRepository.AddSchema(secondDemoSchema);
-        }
-
-        public Task StopAsync(CancellationToken cancellationToken)
-        {
-            return Task.CompletedTask;
+            databaseSchemaRepository.AddSchema(secondDemoSchema);
         }
     }
 }

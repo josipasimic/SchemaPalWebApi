@@ -3,6 +3,8 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using SchemaPalWebApi.Repositories;
 using SchemaPalWebApi.Services;
+using Microsoft.EntityFrameworkCore;
+using SchemaPalWebApi.SchemaPalDbContext;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -31,15 +33,20 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddAuthorization();
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddScoped<ITokenService, TokenService>();
-
 builder.Services.AddSingleton<IPasswordService, PasswordService>();
+
 builder.Services.AddSingleton<IUserRepository, InMemoryUserRepository>();
 builder.Services.AddSingleton<IDatabaseSchemaRepository, InMemoryDatabaseSchemaRepository>();
+
+builder.Services.AddScoped<ITokenService, TokenService>();
+
+//builder.Services.AddDbContext<SchemaPalContext>(options =>
+//    options.UseSqlServer(builder.Configuration.GetConnectionString("SchemaPalDb")));
+//builder.Services.AddScoped<IUserRepository, SqlUserRepository>();
+//builder.Services.AddScoped<IDatabaseSchemaRepository, SqlDatabaseSchemaRepository>();
 
 builder.Services.AddHostedService<DataSeederService>();
 
@@ -47,8 +54,8 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowSchemaPalApp",
         builder => builder.WithOrigins("https://localhost:7135")
-                          .AllowAnyHeader()
-                          .AllowAnyMethod());
+        .AllowAnyHeader()
+        .AllowAnyMethod());
 });
 
 var app = builder.Build();
@@ -58,7 +65,6 @@ app.UseRouting();
 
 app.UseCors("AllowSchemaPalApp");
 
-// Enable authentication and authorization
 app.UseAuthentication();
 app.UseAuthorization();
 
