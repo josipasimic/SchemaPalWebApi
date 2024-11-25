@@ -29,6 +29,13 @@ builder.Services.AddScoped<IUserRepository, SqlUserRepository>();
 builder.Services.AddScoped<IDatabaseSchemaRepository, SqlDatabaseSchemaRepository>();
 ```
 
+Podaci za spajanje na bazu se nalaze u datoteci **`appsettings.json`** pod oznakom  **`ConnectionStrings`** (linije 8-10). Ako se koristi baza podataka na lokalnom serveru, u pravilu se ti podaci ne trebaju mijenjati.
+```csharp
+"ConnectionStrings": {
+    "SchemaPalDb": "Server=localhost;Database=SchemaPalDb;Trusted_Connection=True;TrustServerCertificate=True;"
+  },
+```
+
 Pri pokretanju, aplikacija dodaje defaultnog korisnika s korisničkim imenom "demo.korisnik" i lozinkom "demo123!", ako takav korisnik još ne postoji.
 U slučaju želje za uklanjanjem dodavanja defaultnog korisnika, potrebno je zakomentirati liniju 51 u datoteci **`Program.cs`**: 
 ```csharp
