@@ -52,4 +52,4 @@ builder.Services.AddCors(options =>
         .AllowAnyMethod());
 });
 ```
-Ova adresa se nalazi u datoteci **`Propreties/launchSettings.json`** SchemaPal aplikacije SchemaPal, pod oznakom  **`https`**.
+Ova adresa se nalazi u datoteci **`Properties/launchSettings.json`** SchemaPal aplikacije SchemaPal, pod oznakom  **`https`**.
