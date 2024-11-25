@@ -1,4 +1,4 @@
-# SchemaPal Web API Application
+# SchemaPal Web API aplikacija
 
 Pomoćna ASP.NET Web API aplikacija za autentifikaciju i autorizaciju korisnika te upravljanje podacima u sklopu klijentske aplikacije **SchemaPal**. (https://github.com/josipasimic/SchemaPal)
 
