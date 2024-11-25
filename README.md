@@ -42,7 +42,7 @@ U slučaju želje za uklanjanjem dodavanja defaultnog korisnika, potrebno je zak
 // builder.Services.AddHostedService<DataSeederService>();
 ```
 
-Kako bi lokalni proces aplikacije SchemaPal mogao komunicirati s lokalnim procesom ove aplikacije, potrebno je u datoteci **`Program.cs`** (linije 53-59) dopustiti točnu adresu s portom na kojem se osluškuje aplikacija SchemaPal. 
+Kako bi lokalni proces aplikacije SchemaPal mogao koristiti API ove aplikacije, potrebno je u datoteci **`Program.cs`** (linije 53-59) dopustiti točnu adresu s portom na kojem se osluškuje aplikacija SchemaPal. 
 ```csharp
 builder.Services.AddCors(options =>
 {
