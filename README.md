@@ -36,12 +36,6 @@ Podaci za spajanje na bazu se nalaze u datoteci **`appsettings.json`** pod oznak
   },
 ```
 
-Pri pokretanju, aplikacija dodaje defaultnog korisnika s korisničkim imenom "demo.korisnik" i lozinkom "demo123!", ako takav korisnik još ne postoji.
-U slučaju želje za uklanjanjem dodavanja defaultnog korisnika, potrebno je zakomentirati liniju 51 u datoteci **`Program.cs`**: 
-```csharp
-// builder.Services.AddHostedService<DataSeederService>();
-```
-
 Kako bi lokalni proces aplikacije SchemaPal mogao koristiti API ove aplikacije, potrebno je u datoteci **`Program.cs`** (linije 53-59) dopustiti točnu adresu s portom na kojem se osluškuje aplikacija SchemaPal. 
 ```csharp
 builder.Services.AddCors(options =>
